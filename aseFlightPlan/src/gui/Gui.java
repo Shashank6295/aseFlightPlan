@@ -4,13 +4,13 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+//import javax.swing.table.TableColumn;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+//import java.time.LocalDateTime;
+//import java.time.format.DateTimeFormatter;
+//import java.awt.event.ActionEvent;
 import java.util.*;
 import io.FileManager;
 import FlightResources.*;
@@ -22,7 +22,7 @@ public class Gui {
 		JFrame frame = new JFrame("Flight Tracker");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Adapt this size
-		frame.setSize(1400,900);
+		frame.setSize(1400,500);
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		
@@ -93,7 +93,7 @@ public class Gui {
 				//REMOVE THESE VARIABLES
 				String[] columnNames2 = {""};
 				
-				Object[][] data2 = new Object[20][1];
+				Object[][] data2 = new Object[10][1];
 		
 
 		JTable flightPlanTable = new JTable(data2, columnNames2);
@@ -200,7 +200,7 @@ public class Gui {
 							}
 						}
 					}
-					for(int browseData2= browseTable; browseData2<20;browseData2++) {
+					for(int browseData2= browseTable; browseData2<10;browseData2++) {
 						Arrays.fill(data2[browseData2], null);
 					}
 					flightPlanTable.repaint();
@@ -226,146 +226,146 @@ public class Gui {
 				
 		
 		//Creating the bottom part of the GUI
-		JPanel addFlightPanel = new JPanel();
-		addFlightPanel.setLayout(new GridBagLayout());
-		
-		
-		//Creating the table for adding the flight information:
-		JPanel addFlightInformationPanel = new JPanel();
-		
-		JLabel addFlightLabel = new JLabel("Add Flight");
-		
-		//REMOVE THESE VARIABLES
-		String[] addFlightColumnNames = {"Airline",
-                "Number",
-                "Plane",
-                "Departure",
-                "Destination",
-                "Date",
-                "Time"};
-		
-		Object[][] addFlightData = new Object[1][7];
-
-		JTable addFlightsTable = new JTable(addFlightData, addFlightColumnNames);
-		addFlightsTable.getTableHeader().setReorderingAllowed(false);
-		
-			TableColumn airlineColumn = addFlightsTable.getColumnModel().getColumn(0);
-			JComboBox<Airline> airlines = new JComboBox<Airline>();
-			
-			for(Airline airline: airlinesHM.values()) {
-				airlines.addItem(airline);
-			}
-			airlineColumn.setCellEditor(new DefaultCellEditor(airlines));
-			
-			
-			TableColumn planeColumn = addFlightsTable.getColumnModel().getColumn(2);
-			JComboBox<Aeroplane> planes = new JComboBox<Aeroplane>();
-			
-			for(Aeroplane plane: planesHM.values()) {
-				planes.addItem(plane);
-			}
-			planeColumn.setCellEditor(new DefaultCellEditor(planes));
-			
-			TableColumn depAirportColumn = addFlightsTable.getColumnModel().getColumn(3);
-			JComboBox<Airport> airports = new JComboBox<Airport>();
-			
-			for(Airport airport: airportsHM.values()) {
-				airports.addItem(airport);
-			}
-			depAirportColumn.setCellEditor(new DefaultCellEditor(airports));
-			
-			TableColumn destAirportColumn = addFlightsTable.getColumnModel().getColumn(4);
-			destAirportColumn.setCellEditor(new DefaultCellEditor(airports));
-		
-		JScrollPane addFlightsScrollPane = new JScrollPane(addFlightsTable);
-		addFlightsScrollPane.setPreferredSize(new Dimension (600, 40));
-				
-		addFlightInformationPanel.setLayout(new BoxLayout(addFlightInformationPanel, BoxLayout.PAGE_AXIS));
-		addFlightInformationPanel.add(addFlightLabel);
-		addFlightInformationPanel.add(addFlightsScrollPane);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		addFlightPanel.add(addFlightInformationPanel, gbc);	
-		
-		
-		//Creating the table for adding the flight plan:
-		JPanel addFlightPlanPanel = new JPanel();
-		
-		JLabel addFlightPlanLabel = new JLabel("Flight Plan");
-		
-		//REMOVE THESE VARIABLES
-		String[] addFlightPlanColumnNames = new String[20];
-		for(int j=0; j<20; j++) {
-			addFlightPlanColumnNames[j] = "";
-		}
-		
-		Object[][] addFlightPlanData = new Object[1][20];
-
-		JTable addFlightsPlanTable = new JTable(addFlightPlanData, addFlightPlanColumnNames);
-		addFlightsPlanTable.getTableHeader().setReorderingAllowed(false);
-		
-		for(int j=0; j<addFlightsPlanTable.getColumnCount(); j++) {
-			TableColumn airportColumn = addFlightsPlanTable.getColumnModel().getColumn(j);
-			
-			airportColumn.setCellEditor(new DefaultCellEditor(airports));
-		}
-		
-		JScrollPane addFlightsPlanScrollPane = new JScrollPane(addFlightsPlanTable);
-		addFlightsPlanScrollPane.setPreferredSize(new Dimension (1000, 40));
-				
-		addFlightPlanPanel.setLayout(new BoxLayout(addFlightPlanPanel, BoxLayout.PAGE_AXIS));
-		addFlightPlanPanel.add(addFlightPlanLabel);
-		addFlightPlanPanel.add(addFlightsPlanScrollPane);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		addFlightPanel.add(addFlightPlanPanel, gbc);		
-		
-		
-		JButton buttonAdd = new JButton("Add");
-		buttonAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				LinkedList<ControlTower> flightPlan = new LinkedList<ControlTower>();
-				for(int i=0; i<20; i++) {
-					if(addFlightsPlanTable.getValueAt(0,i) != null)
-					flightPlan.add(((Airport) addFlightsPlanTable.getValueAt(0, i)).getControlTower());
-				}
-				
-				((Airline) addFlightsTable.getValueAt(0, 0)).getCode();
-				
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM:dd:yyyy HH:mm");
-				LocalDateTime dateTime = LocalDateTime.parse(addFlightsTable.getValueAt(0, 5) + " " + addFlightsTable.getValueAt(0, 6), formatter);
-				
-				Flight newFlightToAdd = new Flight(((Airline) addFlightsTable.getValueAt(0, 0)).getCode() + addFlightsTable.getValueAt(0,1),
-												   (Aeroplane) addFlightsTable.getValueAt(0, 2),
-												   (Airport) addFlightsTable.getValueAt(0, 3),
-												   (Airport) addFlightsTable.getValueAt(0, 4),
-												   dateTime,
-												   new FlightPlan(flightPlan));
-				
-				flightsHM.put(newFlightToAdd.getIdentifier(), newFlightToAdd);
-				
-				Object [] newData = new Object[6];
-				newData[0] = newFlightToAdd.getIdentifier();
-				newData[1] = flightsHM.get(newFlightToAdd.getIdentifier()).getPlane().getModel();
-				newData[2] = flightsHM.get(newFlightToAdd.getIdentifier()).getDepartureAirport().getCode();
-				newData[3] = flightsHM.get(newFlightToAdd.getIdentifier()).getDestinationAirport().getCode();
-				newData[4] = flightsHM.get(newFlightToAdd.getIdentifier()).getDepartureDateTime().toString();
-				newData[5] = flightsHM.get(newFlightToAdd.getIdentifier()).getDepartureDateTime().toString();
-				((DefaultTableModel) flightsTable.getModel()).addRow(newData);
-				flightsTable.repaint();
-				
-				FileManager.saveFlights(flightsHM);
-				
-				
-			}
-		});
+//		JPanel addFlightPanel = new JPanel();
+//		addFlightPanel.setLayout(new GridBagLayout());
+//		
+//		
+//		//Creating the table for adding the flight information:
+//		JPanel addFlightInformationPanel = new JPanel();
+//		
+//		JLabel addFlightLabel = new JLabel("Add Flight");
+//		
+//		//REMOVE THESE VARIABLES
+//		String[] addFlightColumnNames = {"Airline",
+//                "Number",
+//                "Plane",
+//                "Departure",
+//                "Destination",
+//                "Date",
+//                "Time"};
+//		
+//		Object[][] addFlightData = new Object[1][7];
+//
+//		JTable addFlightsTable = new JTable(addFlightData, addFlightColumnNames);
+//		addFlightsTable.getTableHeader().setReorderingAllowed(false);
+//		
+//			TableColumn airlineColumn = addFlightsTable.getColumnModel().getColumn(0);
+//			JComboBox<Airline> airlines = new JComboBox<Airline>();
+//			
+//			for(Airline airline: airlinesHM.values()) {
+//				airlines.addItem(airline);
+//			}
+//			airlineColumn.setCellEditor(new DefaultCellEditor(airlines));
+//			
+//			
+//			TableColumn planeColumn = addFlightsTable.getColumnModel().getColumn(2);
+//			JComboBox<Aeroplane> planes = new JComboBox<Aeroplane>();
+//			
+//			for(Aeroplane plane: planesHM.values()) {
+//				planes.addItem(plane);
+//			}
+//			planeColumn.setCellEditor(new DefaultCellEditor(planes));
+//			
+//			TableColumn depAirportColumn = addFlightsTable.getColumnModel().getColumn(3);
+//			JComboBox<Airport> airports = new JComboBox<Airport>();
+//			
+//			for(Airport airport: airportsHM.values()) {
+//				airports.addItem(airport);
+//			}
+//			depAirportColumn.setCellEditor(new DefaultCellEditor(airports));
+//			
+//			TableColumn destAirportColumn = addFlightsTable.getColumnModel().getColumn(4);
+//			destAirportColumn.setCellEditor(new DefaultCellEditor(airports));
+//		
+//		JScrollPane addFlightsScrollPane = new JScrollPane(addFlightsTable);
+//		addFlightsScrollPane.setPreferredSize(new Dimension (600, 40));
+//				
+//		addFlightInformationPanel.setLayout(new BoxLayout(addFlightInformationPanel, BoxLayout.PAGE_AXIS));
+//		addFlightInformationPanel.add(addFlightLabel);
+//		addFlightInformationPanel.add(addFlightsScrollPane);
+//		
+//		gbc.gridx = 0;
+//		gbc.gridy = 0;
+//		addFlightPanel.add(addFlightInformationPanel, gbc);	
+//		
+//		
+//		//Creating the table for adding the flight plan:
+//		JPanel addFlightPlanPanel = new JPanel();
+//		
+//		JLabel addFlightPlanLabel = new JLabel("Flight Plan");
+//		
+//		//REMOVE THESE VARIABLES
+//		String[] addFlightPlanColumnNames = new String[20];
+//		for(int j=0; j<20; j++) {
+//			addFlightPlanColumnNames[j] = "";
+//		}
+//		
+//		Object[][] addFlightPlanData = new Object[1][20];
+//
+//		JTable addFlightsPlanTable = new JTable(addFlightPlanData, addFlightPlanColumnNames);
+//		addFlightsPlanTable.getTableHeader().setReorderingAllowed(false);
+//		
+//		for(int j=0; j<addFlightsPlanTable.getColumnCount(); j++) {
+//			TableColumn airportColumn = addFlightsPlanTable.getColumnModel().getColumn(j);
+//			
+//			airportColumn.setCellEditor(new DefaultCellEditor(airports));
+//		}
+//		
+//		JScrollPane addFlightsPlanScrollPane = new JScrollPane(addFlightsPlanTable);
+//		addFlightsPlanScrollPane.setPreferredSize(new Dimension (1000, 40));
+//				
+//		addFlightPlanPanel.setLayout(new BoxLayout(addFlightPlanPanel, BoxLayout.PAGE_AXIS));
+//		addFlightPlanPanel.add(addFlightPlanLabel);
+//		addFlightPlanPanel.add(addFlightsPlanScrollPane);
+//		
+//		gbc.gridx = 0;
+//		gbc.gridy = 1;
+//		addFlightPanel.add(addFlightPlanPanel, gbc);		
+//		
+//		
+//		JButton buttonAdd = new JButton("Add");
+//		buttonAdd.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				LinkedList<ControlTower> flightPlan = new LinkedList<ControlTower>();
+//				for(int i=0; i<20; i++) {
+//					if(addFlightsPlanTable.getValueAt(0,i) != null)
+//					flightPlan.add(((Airport) addFlightsPlanTable.getValueAt(0, i)).getControlTower());
+//				}
+//				
+//				((Airline) addFlightsTable.getValueAt(0, 0)).getCode();
+//				
+//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM:dd:yyyy HH:mm");
+//				LocalDateTime dateTime = LocalDateTime.parse(addFlightsTable.getValueAt(0, 5) + " " + addFlightsTable.getValueAt(0, 6), formatter);
+//				
+//				Flight newFlightToAdd = new Flight(((Airline) addFlightsTable.getValueAt(0, 0)).getCode() + addFlightsTable.getValueAt(0,1),
+//												   (Aeroplane) addFlightsTable.getValueAt(0, 2),
+//												   (Airport) addFlightsTable.getValueAt(0, 3),
+//												   (Airport) addFlightsTable.getValueAt(0, 4),
+//												   dateTime,
+//												   new FlightPlan(flightPlan));
+//				
+//				flightsHM.put(newFlightToAdd.getIdentifier(), newFlightToAdd);
+//				
+//				Object [] newData = new Object[6];
+//				newData[0] = newFlightToAdd.getIdentifier();
+//				newData[1] = flightsHM.get(newFlightToAdd.getIdentifier()).getPlane().getModel();
+//				newData[2] = flightsHM.get(newFlightToAdd.getIdentifier()).getDepartureAirport().getCode();
+//				newData[3] = flightsHM.get(newFlightToAdd.getIdentifier()).getDestinationAirport().getCode();
+//				newData[4] = flightsHM.get(newFlightToAdd.getIdentifier()).getDepartureDateTime().toString();
+//				newData[5] = flightsHM.get(newFlightToAdd.getIdentifier()).getDepartureDateTime().toString();
+//				((DefaultTableModel) flightsTable.getModel()).addRow(newData);
+//				flightsTable.repaint();
+//				
+//				FileManager.saveFlights(flightsHM);
+//				
+//				
+//			}
+//		});
 		
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		addFlightPanel.add(buttonAdd, gbc);
+//		addFlightPanel.add(buttonAdd, gbc);
 		
 		
 		gbc.gridx = 0;
@@ -375,7 +375,7 @@ public class Gui {
 		frame.getContentPane().add(flightInformationPanel, gbc);
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		frame.getContentPane().add(addFlightPanel, gbc);
+//		frame.getContentPane().add(addFlightPanel, gbc);
 		
 		frame.setVisible(true);
 	}
